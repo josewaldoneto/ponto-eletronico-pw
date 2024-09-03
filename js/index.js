@@ -33,7 +33,7 @@ function getCurrentHour() {
     // slice()
     // formatos de hora considerando o locale do usuário
     const date = new Date();
-    return date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    return String(date.getHours()).padStart(2, '0') + ":" + String(date.getMinutes()).padStart(2, '0') + ":" + String(date.getSeconds()).padStart(2, '0')
 }
 
 
@@ -46,13 +46,8 @@ function getCurrentDate() {
     const date = new Date();
     let month = date.getMonth();
     let day = date.getDate();
-    if (day < 10) {
-        day = "0" + day
-    }
-    if (month < 10) {
-        month = "0" + (month + 1)
-    }
-    return day + "/" + month + "/" + date.getFullYear();
+
+    return String(day).padStart(2, '0') + "/" + String(month).padStart(2, '0') + "/" + date.getFullYear();
 }
 
 function printCurrentHour() {

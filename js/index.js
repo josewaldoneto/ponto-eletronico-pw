@@ -83,8 +83,16 @@ btnDialogBaterPonto.addEventListener("click", () => {
     };
     
     console.log(ponto);
-    alert("Ponto registrado com sucesso!")
+
+    saveRegisterLocalStorage(JSON.stringify(ponto));
+
+    alert("Ponto registrado com sucesso!");
+    dialogPonto.close();
 });
+
+function saveRegisterLocalStorage(register) {
+    localStorage.setItem("registro", register);
+}
 
 function register() {
     // Abrir <dialog> com, no mínimo, 4 botões

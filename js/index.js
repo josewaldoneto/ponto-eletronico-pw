@@ -1,6 +1,6 @@
 navigator.geolocation.getCurrentPosition((position) => {
-    console.log(position);   
-})
+    console.log(position);
+});
 
 
 const diaSemana = document.getElementById("dia-semana");
@@ -49,15 +49,42 @@ function getCurrentDate() {
     // Verificar se no Date() há algum método que possa auxiliar
     // locale
     const date = new Date();
-    let month = date.getMonth();
+    let month = date.getMonth()+1;
     let day = date.getDate();
 
     return String(day).padStart(2, '0') + "/" + String(month).padStart(2, '0') + "/" + date.getFullYear();
 }
 
+function getCurrentPosition() {
+    navigator.geolocation.getCurrentPosition((position) => {
+        return position;
+    });
+}
+
+
 function printCurrentHour() {
     horaMinSeg.textContent = getCurrentHour();
 }
+
+const btnDialogBaterPonto= document.getElementById("btn-dialog-bater-ponto");
+btnDialogBaterPonto.addEventListener("click", () => {
+    // Recupere as informações de data, hora, localização e tipo
+    // Salve em um objeto javascript
+
+    let ponto = {
+        "data": getCurrentDate(),
+        "hora": getCurrentHour(),
+        "localizacao": {
+            "lat": getCurrentPosition(),
+            "long": getCurrentPosition()
+        },
+        "id": 1,
+        "tipo": document.getElementById("tipos-ponto").value
+    };
+    
+    console.log(ponto);
+    alert("Ponto registrado com sucesso!")
+});
 
 function register() {
     // Abrir <dialog> com, no mínimo, 4 botões

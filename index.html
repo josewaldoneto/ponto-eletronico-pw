@@ -16,13 +16,14 @@
     <dialog id="dialog-ponto">
         <p id="dialog-data"></p>
         <p id="dialog-hora"></p>
-        <!-- Transformar em um select -->
-        <!-- Por padrão, estará com o valor do próximo tipo de ponto -->
-        <button id="btn-entrada">Entrada</button>
-        <button id="btn-intervalo">Intervalo</button>
-        <button id="btn-volta-intervalo">Volta Intervalo</button>
-        <button id="btn-saida">Saida</button>
-        <button id="btn-dialog-fechar">X</button> 
+    <select name="tipos-ponto" id="tipos-ponto" >
+        <option value="entrada">Entrada</option>
+        <option value="intervalo">Intervalo</option>
+        <option value="volta-intervalo">Volta Intervalo</option>
+        <option value="saida">Saida</option>
+    </select>
+    <button id="btn-dialog-bater-ponto">Registrar ponto</button>
+    <button id="btn-dialog-fechar">X</button> 
     </dialog>
     <!-- criar histórico dos últimos n registros-->
     <!-- criar footer para alerta -->

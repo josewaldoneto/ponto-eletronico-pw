@@ -1,8 +1,3 @@
-navigator.geolocation.getCurrentPosition((position) => {
-    console.log(position);
-});
-
-
 const diaSemana = document.getElementById("dia-semana");
 const diaMesAno = document.getElementById("dia-mes-ano");
 const horaMinSeg = document.getElementById("hora-min-seg");
@@ -16,6 +11,8 @@ const btnDialogFechar = document.getElementById("btn-dialog-fechar");
 btnDialogFechar.addEventListener("click", () => {
     dialogPonto.close();
 })
+
+let registerLocalStorage = getRegisterLocalStorage();
 
 const dialogData = document.getElementById("dialog-data");
 dialogData.textContent = "Data: " + getCurrentDate();
@@ -70,6 +67,7 @@ const btnDialogBaterPonto= document.getElementById("btn-dialog-bater-ponto");
 btnDialogBaterPonto.addEventListener("click", () => {
     // Recupere as informações de data, hora, localização e tipo
     // Salve em um objeto javascript
+    let typeRegister = document.getElementById("tipos-ponto").value;
 
     let ponto = {
         "data": getCurrentDate(),
@@ -79,19 +77,35 @@ btnDialogBaterPonto.addEventListener("click", () => {
             "long": getCurrentPosition()
         },
         "id": 1,
-        "tipo": document.getElementById("tipos-ponto").value
+        "tipo": typeRegister
     };
     
     console.log(ponto);
 
-    saveRegisterLocalStorage(JSON.stringify(ponto));
+    saveRegisterLocalStorage(ponto);
 
-    alert("Ponto registrado com sucesso!");
+    localStorage.setItem("ultimoRegistroTipo", typeRegister)
+
+    // alert("Ponto registrado com sucesso!");
     dialogPonto.close();
 });
 
 function saveRegisterLocalStorage(register) {
-    localStorage.setItem("registro", register);
+    registerLocalStorage.push(register); // Array
+    localStorage.setItem("registro", JSON.stringify(registerLocalStorage));
+}
+
+console.log(getRegisterLocalStorage());
+
+// Função deve retornar um array, mesmo vazio
+function getRegisterLocalStorage() {
+    let registers = localStorage.getItem("register");
+
+    if(!registers) {
+        return [];
+    }
+
+    return JSON.parse(registers);
 }
 
 function register() {
@@ -99,4 +113,5 @@ function register() {
     dialogPonto.showModal();
 }
 
+printCurrentHour();
 setInterval(printCurrentHour, 1000);

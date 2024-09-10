@@ -1,3 +1,5 @@
+// Organizar
+
 const diaSemana = document.getElementById("dia-semana");
 const diaMesAno = document.getElementById("dia-mes-ano");
 const horaMinSeg = document.getElementById("hora-min-seg");
@@ -15,10 +17,7 @@ btnDialogFechar.addEventListener("click", () => {
 let registerLocalStorage = getRegisterLocalStorage();
 
 const dialogData = document.getElementById("dialog-data");
-dialogData.textContent = "Data: " + getCurrentDate();
-
 const dialogHora = document.getElementById("dialog-hora");
-dialogHora.textContent = "Hora: " + getCurrentHour();
 
 diaSemana.textContent = getWeekDay();
 diaMesAno.textContent = getCurrentDate();
@@ -109,7 +108,9 @@ function getRegisterLocalStorage() {
 }
 
 function register() {
-    // Abrir <dialog> com, no mínimo, 4 botões
+    // Atualizar hora e data a cada segundo
+    dialogData.textContent = "Data: " + getCurrentDate();
+    dialogHora.textContent = "Hora: " + getCurrentHour();
     dialogPonto.showModal();
 }
 

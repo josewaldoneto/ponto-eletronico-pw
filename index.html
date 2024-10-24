@@ -7,20 +7,17 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="alerta-registro-ponto" class="hidden">
-        <p>Ponto registrado com sucesso</p>
-    </div>
+    <div id="alerta-registro-ponto" class="hidden">Ponto registrado com sucesso!</div>
     <div class="data-hora">
         <p id="dia-semana">Segunda-feira</p>
-        <p id="dia-mes-ano">26/08/2024</p>
-        <p id="hora-min-seg">08:01:35</p>
+        <p id="dia-mes-ano">00/00/0000</p>
+        <p id="hora-min-seg">00:00:00</p>
     </div>
     <div id="div-btn-bater-ponto">
         <button id="btn-bater-ponto" class="button">Bater ponto!</button>
+        <button id="btn-registrar-ausencia" class="button">Registrar Ausência</button>
     </div>
     <dialog id="dialog-ponto">
-        <!-- TO-DO: -->
-        <!-- Quais outras informações relevantes podemos mostrar para o usuário? -->
         <p id="dialog-data"></p>
         <p id="dialog-hora"></p>
         <select name="tipos-ponto" id="tipos-ponto">
@@ -33,9 +30,15 @@
         <p id="dialog-last-register"></p>
         <button id="btn-dialog-fechar">X</button>
     </dialog>
-    <!-- TO-DO: -->
-    <!-- criar histórico dos últimos n registros-->
-    <!-- criar footer para alerta -->
+
+    <dialog id="dialog-ausencia">
+        <p>Registrar Ausência:</p>
+        <input type="text" id="justificativa" placeholder="Justificativa">
+        <input type="file" id="upload-file">
+        <button id="btn-dialog-registrar-ausencia">Registrar</button>
+        <button id="btn-dialog-fechar-ausencia">X</button>
+    </dialog>
+
     <script src="js/index.js"></script>
 </body>
 </html>

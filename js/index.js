@@ -1,127 +1,117 @@
+const btnBaterPonto = document.getElementById("btn-bater-ponto");
+const dialogPonto = document.getElementById("dialog-ponto");
+const divAlertaRegistroPonto = document.getElementById("alerta-registro-ponto");
+const btnDialogBaterPonto = document.getElementById("btn-dialog-bater-ponto");
+const btnDialogFechar = document.getElementById("btn-dialog-fechar");
+
 const diaSemana = document.getElementById("dia-semana");
 const diaMesAno = document.getElementById("dia-mes-ano");
 const horaMinSeg = document.getElementById("hora-min-seg");
+diaSemana.textContent = getWeekDay();
+diaMesAno.textContent = getCurrentDate();
+updateClock();
 
-const btnBaterPonto = document.getElementById("btn-bater-ponto");
-btnBaterPonto.addEventListener("click", register);
+function updateClock() {
+    horaMinSeg.textContent = getCurrentHour();
+    setTimeout(updateClock, 1000);
+}
 
-const btnRegistrarAusencia = document.getElementById("btn-registrar-ausencia");
-btnRegistrarAusencia.addEventListener("click", showAbsenceDialog);
+btnBaterPonto.addEventListener("click", () => {
+    dialogPonto.showModal();
+    document.getElementById("dialog-data").textContent = `Data: ${getCurrentDate()}`;
+    document.getElementById("dialog-hora").textContent = `Hora: ${getCurrentHour()}`;
+    document.getElementById("dialog-last-register").textContent = `Último registro: ${localStorage.getItem("lastDateRegister") || "N/A"}`;
+});
 
-const dialogPonto = document.getElementById("dialog-ponto");
-const btnDialogFechar = document.getElementById("btn-dialog-fechar");
 btnDialogFechar.addEventListener("click", () => {
     dialogPonto.close();
 });
 
-const dialogAusencia = document.getElementById("dialog-ausencia");
-const btnDialogFecharAusencia = document.getElementById("btn-dialog-fechar-ausencia");
-btnDialogFecharAusencia.addEventListener("click", () => {
-    dialogAusencia.close();
+const btnVerRelatorio = document.getElementById("btn-ver-relatorio");
+
+btnVerRelatorio.addEventListener("click", () => {
+    window.location.href = "relatorio.html";
 });
-
-const btnDialogRegistrarAusencia = document.getElementById("btn-dialog-registrar-ausencia");
-btnDialogRegistrarAusencia.addEventListener("click", registerAbsence);
-
-const dialogData = document.getElementById("dialog-data");
-const dialogHora = document.getElementById("dialog-hora");
-const divAlertaRegistroPonto = document.getElementById("alerta-registro-ponto");
-
-diaSemana.textContent = getWeekDay();
-diaMesAno.textContent = getCurrentDate();
-printCurrentHour();
-setInterval(printCurrentHour, 1000);
-
-let registerLocalStorage = getRegisterLocalStorage();
-
-function register() {
-    dialogData.textContent = "Data: " + getCurrentDate();
-    dialogHora.textContent = "Hora: " + getCurrentHour();
-    
-    let lastRegisterText = "Último registro: " + localStorage.getItem("lastDateRegister") + " - " + localStorage.getItem("lastTimeRegister") + " | " + localStorage.getItem("lastTypeRegister");
-    document.getElementById("dialog-last-register").textContent = lastRegisterText;
-
-    dialogPonto.showModal();
-}
-
-function showAbsenceDialog() {
-    dialogAusencia.showModal();
-}
-
-function registerAbsence() {
-    const justificativa = document.getElementById("justificativa").value;
-    const uploadFile = document.getElementById("upload-file").files[0];
-    
-    if (!justificativa) {
-        alert("Por favor, insira uma justificativa.");
-        return;
-    }
-
-    let absence = {
-        "data": getCurrentDate(),
-        "hora": getCurrentHour(),
-        "justificativa": justificativa,
-        "file": uploadFile ? uploadFile.name : null
-    };
-
-    saveAbsenceLocalStorage(absence);
-    dialogAusencia.close();
-    showAlert("Ausência registrada com sucesso!", "success");
-}
 
 function showAlert(message, type) {
     divAlertaRegistroPonto.querySelector("p").textContent = message;
-    divAlertaRegistroPonto.classList.remove("hidden");
+    divAlertaRegistroPonto.style.backgroundColor = type === "success" ? "green" : "red";
     divAlertaRegistroPonto.classList.add("show");
-    
-    if (type === "error") {
-        divAlertaRegistroPonto.querySelector("p").style.backgroundColor = "rgb(255, 0, 0)";
-    } else {
-        divAlertaRegistroPonto.querySelector("p").style.backgroundColor = "rgb(0, 255, 0)";
-    }
 
     setTimeout(() => {
         divAlertaRegistroPonto.classList.remove("show");
-        divAlertaRegistroPonto.classList.add("hidden");
-    }, 5000);
+    }, 3000);
 }
 
-function saveAbsenceLocalStorage(absence) {
-    let absences = getAbsenceLocalStorage();
-    absences.push(absence);
-    localStorage.setItem("absences", JSON.stringify(absences));
+btnDialogBaterPonto.addEventListener("click", saveRegister);
+
+function getCurrentPosition() {
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => resolve(position.coords),
+                (error) => reject(error)
+            );
+        } else {
+            reject(new Error("Geolocation not supported by this browser."));
+        }
+    });
 }
 
-function getAbsenceLocalStorage() {
-    let absences = localStorage.getItem("absences");
-    return absences ? JSON.parse(absences) : [];
-}
+async function saveRegister() {
+    const registerType = document.getElementById("tipos-ponto").value;
+    const observacao = document.getElementById("observacao").value;
+    const justificativa = document.getElementById("arquivo-justificativa").files[0] || null;
 
-function saveRegisterLocalStorage(register) {
-    registerLocalStorage.push(register);
-    localStorage.setItem("register", JSON.stringify(registerLocalStorage));
-}
+    let location;
+    try {
+        location = await getCurrentPosition();
+    } catch (error) {
+        console.error("Erro ao obter localização:", error);
+        showAlert("Erro: Não foi possível obter a localização.", "error");
+        return;
+    }
 
-function getRegisterLocalStorage() {
-    let registers = localStorage.getItem("register");
-    return registers ? JSON.parse(registers) : [];
+    const pontoData = {
+        "data": getCurrentDate(),
+        "hora": getCurrentHour(),
+        "localizacao": location ? `Lat: ${location.latitude}, Lng: ${location.longitude}` : "Localização indisponível",
+        "tipo": registerType,
+        "observacao": observacao,
+        "justificativa": justificativa ? justificativa.name : "",
+        "id": Date.now()
+    };
+
+    saveRegisterLocalStorage(pontoData);
+    showAlert("Ponto registrado com sucesso!", "success");
+
+    localStorage.setItem("lastTypeRegister", registerType);
+    localStorage.setItem("lastDateRegister", pontoData.data);
+    localStorage.setItem("lastTimeRegister", pontoData.hora);
+
+    dialogPonto.close();
 }
 
 function getWeekDay() {
-    const today = new Date();
-    return today.toLocaleString("pt-BR", { weekday: 'long' });
-}
-
-function getCurrentDate() {
-    const today = new Date();
-    return today.toLocaleDateString("pt-BR");
+    const days = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+    return days[new Date().getDay()];
 }
 
 function getCurrentHour() {
-    const today = new Date();
-    return today.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const date = new Date();
+    return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }
 
-function printCurrentHour() {
-    horaMinSeg.textContent = getCurrentHour();
+function getCurrentDate() {
+    return new Date().toLocaleDateString("pt-BR");
+}
+
+function saveRegisterLocalStorage(register) {
+    const registerList = getRegisterLocalStorage();
+    registerList.push(register);
+    localStorage.setItem("register", JSON.stringify(registerList));
+}
+
+function getRegisterLocalStorage() {
+    return JSON.parse(localStorage.getItem("register")) || [];
 }

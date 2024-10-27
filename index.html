@@ -7,38 +7,36 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="alerta-registro-ponto" class="hidden">Ponto registrado com sucesso!</div>
+    <div id="alerta-registro-ponto" class="hidden">
+        <p>Ponto registrado com sucesso</p>
+    </div>
     <div class="data-hora">
         <p id="dia-semana">Segunda-feira</p>
-        <p id="dia-mes-ano">00/00/0000</p>
-        <p id="hora-min-seg">00:00:00</p>
+        <p id="dia-mes-ano">26/08/2024</p>
+        <p id="hora-min-seg">08:01:35</p>
     </div>
     <div id="div-btn-bater-ponto">
         <button id="btn-bater-ponto" class="button">Bater ponto!</button>
-        <button id="btn-registrar-ausencia" class="button">Registrar Ausência</button>
     </div>
     <dialog id="dialog-ponto">
         <p id="dialog-data"></p>
         <p id="dialog-hora"></p>
+        <input type="date" id="data-ponto" max="today">
         <select name="tipos-ponto" id="tipos-ponto">
             <option value="entrada">Entrada</option>
             <option value="intervalo">Intervalo</option>
             <option value="volta-intervalo">Volta Intervalo</option>
             <option value="saida">Saída</option>
         </select>
+        <textarea id="observacao" placeholder="Adicionar observação"></textarea>
+        <input type="file" id="arquivo-justificativa" accept=".pdf,.jpg,.png,.docx" />
         <button id="btn-dialog-bater-ponto">Registrar ponto</button>
-        <p id="dialog-last-register"></p>
         <button id="btn-dialog-fechar">X</button>
+        <p id="dialog-last-register"></p>
     </dialog>
-
-    <dialog id="dialog-ausencia">
-        <p>Registrar Ausência:</p>
-        <input type="text" id="justificativa" placeholder="Justificativa">
-        <input type="file" id="upload-file">
-        <button id="btn-dialog-registrar-ausencia">Registrar</button>
-        <button id="btn-dialog-fechar-ausencia">X</button>
-    </dialog>
-
+    <div id="div-btn-relatorio">
+        <button id="btn-ver-relatorio">Ver Relatório</button>
+    </div>
     <script src="js/index.js"></script>
 </body>
 </html>

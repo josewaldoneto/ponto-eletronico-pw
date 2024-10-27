@@ -18,6 +18,23 @@
         <button id="btn-voltar-inicio">Voltar para Início</button>
     </div>
 
+    <dialog id="edit-dialog">
+        <p>Editar Registro</p>
+        <label>Data:</label>
+        <input type="date" id="edit-data" />
+        <label>Tipo:</label>
+        <select id="edit-tipo">
+            <option value="entrada">Entrada</option>
+            <option value="intervalo">Intervalo</option>
+            <option value="volta-intervalo">Volta Intervalo</option>
+            <option value="saida">Saída</option>
+        </select>
+        <label>Observação:</label>
+        <textarea id="edit-observacao" placeholder="Adicionar observação"></textarea>
+        <button id="save-edit-btn">Salvar</button>
+        <button id="cancel-edit-btn">Cancelar</button>
+    </dialog>
+
     <script src="js/relatorio.js"></script>
 </body>
 </html>
